@@ -16,8 +16,6 @@
 
 #include <Arduino.h>
 
-#if defined()
-
 #if !defined(ARDUINO_ESP32C3_OLED_MINI) && !defined(ARDUINO_MINI_ESP32C3_OLED)  && !defined(ARDUINO_ESP32C3_DEV) 
   #error "An ESP32-C3 Mini board with 0.42\" OLED display or a generic ESP32-C3 Super Mini board is required"
 #endif  
