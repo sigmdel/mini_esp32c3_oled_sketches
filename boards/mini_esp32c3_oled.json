@@ -6,7 +6,7 @@
     "flash_mode": "qio",
     "extra_flags": "-DARDUINO_MINI_ESP32C3_OLED -DARDUINO_USB_MODE=1 -DARDUINO_USB_CDC_ON_BOOT=1",
     "mcu": "esp32c3",
-    "variants_dir": "/home/michel/Documents/PlatformIO/GitHubs/oled_esp32c3_sketches/boards/",
+    "variants_dir": "../boards",
     "variant": "mini_esp32c3_oled"
   },
   "connectivity": [
