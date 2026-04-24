@@ -1,7 +1,7 @@
 # mini_esp32c3_oled_sketches
 Simultaneous use of SPI and I2C with Mini ESP32C3 with 0.42" OLED display board
 
-***April 23, 2026***
+***April 24, 2026***
 
 
 This repository contains a few PlatformIO/pioarduino projects for a common mini ESP32-C3-based development board that sports an onboard 0.42" OLED display and a USB-C connector. 
@@ -21,17 +21,18 @@ The image above, *borrowed* from a vendor site, corresponds exactly to the board
   - [2.2. Variant esp32c3_oled_mini](#22-variant-esp32c3_oled_mini)
   - [2.3. Better Choice](#23-better-choice)
 - [3. pioarduino](#3-pioarduino)
-- [4. Configuration](#4-configuration)
-- [5. Projects](#5-projects)
-  - [5.1. Project: `01_pin_names`](#51-project-01_pin_names)
-  - [5.2. Project: `24_spi_master`](#52-project-24_spi_master)
-  - [5.3. Project: `25_spi_slave`](#53-project-25_spi_slave)
-  - [5.4. Project: `27_i2c_oled`](#54-project-27_i2c_oled)
-  - [5.5. Project: `28_spi_master_i2c_oled`](#55-project-28_spi_master_i2c_oled)
-  - [5.6. Project: `29_spi_slave_i2c_oled`](#56-project-29_spi_slave_i2c_oled)
-- [6. References](#6-references)
-- [7. Change Log](#7-change-log)
-- [8. License](#8-license)
+- [4. Arduino](#4-arduino)
+- [5. Configuration](#5-configuration)
+- [6. Projects](#6-projects)
+  - [6.1. Project: `01_pin_names`](#61-project-01_pin_names)
+  - [6.2. Project: `24_spi_master`](#62-project-24_spi_master)
+  - [6.3. Project: `25_spi_slave`](#63-project-25_spi_slave)
+  - [6.4. Project: `27_i2c_oled`](#64-project-27_i2c_oled)
+  - [6.5. Project: `28_spi_master_i2c_oled`](#65-project-28_spi_master_i2c_oled)
+  - [6.6. Project: `29_spi_slave_i2c_oled`](#66-project-29_spi_slave_i2c_oled)
+- [7. References](#7-references)
+- [8. Change Log](#8-change-log)
+- [9. License](#9-license)
 
 <!-- /TOC -->
 ---
@@ -125,7 +126,7 @@ static const uint8_t A4 = 4;
 - Advantage: The user LED remains available.
 - Disadvantage: One of the five analogue input pin is no longer available.
 
-Of course, any I/O pin from 1 to 4 (A1 to A4) could be connected to the SS signal of the SPI controller with the same result as obtained by choosing 0 (A0).
+Of course, any I/O pin from 1 to 4 (A1 to A4) could be connected to the SS signal of the SPI controller with the same result as obtained by choosing 0 (A0). Choosing A3 or A4 instead of A0, A1 or A2 may be better for signal routing purposes because all the SPI connections would then be on the same header.
 
 ### 2.3. Better Choice
 
@@ -137,8 +138,6 @@ That said, the `esp32c3_oled_mini` definition is probably the better choice if t
 
 The sketches in this repository are meant to be compiled in the [pioarduino](https://github.com/pioarduino/pioarduino-vscode-ide) fork of [PlatformIO](https://platformio.org/). The former is arguably better than the latter when using recent ESP32 microcontrollers. 
 
-There are no Arduino versions of the sketches because a simple way of adding third party board definitions in that environment without distributing a modified version of the huge (2.5+ MBytes) `boards.txt` file was not found.
-
 Unlike the Arduino IDE, the pioarduino IDE is not a stand-alone application. It is an [extension](https://marketplace.visualstudio.com/items?itemName=pioarduino.pioarduino-ide) that can be installed in [Visual Studio Code](https://code.visualstudio.com/) (VSCode for short) editor. The extension is also available in the  [marketplace](https://open-vsx.org/extension/pioarduino/pioarduino-ide). [VSCodium](https://vscodium.com/) is a less well-known fork of VSCode that claims to have removed telemetry/tracking. Version 1.3.18 which was used while developing these sketches, does not contain the AI additions that have apparently been added to VSCode. 
 
 The pioarduino IDE extension is available in the extension marketplace of both code editors. Consequently, its installation is a simple three-step procedure shown in the IKEA-like instruction diagram below.
@@ -147,7 +146,11 @@ The pioarduino IDE extension is available in the extension marketplace of both c
 
 All of the sketches in the repository have been successfully compiled with the [pioarduino-espressif32](https://github.com/pioarduino/platform-espressif32) platform version 55.03.37 released February 11, 2026. This contains the version 3.3.7 of the Arduino ESP32 core based on ESP-IDF v5.5.2.260206. All projects should compile without problems with the newest version of the platform, which is currently 55.03.33 based on v3.3.8 of the ESP32 Arduino core, but this has not been tested.
 
-## 4. Configuration
+## 4. Arduino 
+
+It is possible to test the proposed board definitions and variant `pins_arduino.h` files in the Arduino IDE. Unfortunately, the [manual installation](boards/ArduinoVersion.md) will be lost when the `esp32 package` is updated.
+
+## 5. Configuration
 
 The April 23 update of this repository changed the value of the `"variants_dir"` key in the board definitions manifests (`esp32c3_oled_mini.json` and `mini_esp32c3_oled.json`) to the relative path of the `boards` directory. In the original version, the absolute path was provided which had a zero probability of working for most users. The relative path works in Linux and, hopefully, it works in other operating systems. If it doesn't then something like the following error will happen during compilation.
 
@@ -173,7 +176,7 @@ Processing esp32c3_oled_mini (board: esp32c3_oled_mini; platform: https://github
 
 then the problem might be with the relative path `"../boards"` in the project configuration file `platformio.ini`. Again the solution could be to use the absolute path of the `boards` folder as the value of the `boards_dir` key. If there is a problem with the `boards_dir` entry in the configuration file, the `lib_dir` entry will probably be wrong also and, again, using the absolute path may be the solution.
 
-## 5. Projects
+## 6. Projects
 
 All sketches in the [super_mini_esp32c3_sketches](https://github.com/sigmdel/supermini_esp32c3_sketches) repository can be uploaded to the ESP32-C3 Mini with a 0.42" OLED display because the latter is essentially an ESP32-C3 Super Mini with the extra constraint that the OLED display's SDA and SCL signal lines are connected to GPIO 5 and 6. Consequently, this repository only contains projects that are applicable to the ESP32-C3 OLED Mini where using a bespoke board definition is helpful.
 
@@ -182,7 +185,7 @@ in [super_mini_esp32c3_sketches](https://github.com/sigmdel/supermini_esp32c3_sk
 
 More interestingly,  `28_spi_master_i2c_oled` and `29_spi_slave_i2c_oled` are new projects that show how either of the board definitions proposed here facilitates the use of the Mini with OLED when using the I2C and SPI (as master or slave) controllers simultaneously. The `24_spi_master` and `25_spid_slave` projects are here only to help in testing the SPI and I2C peripherals of the Mini with OLED when a second board of that type is not available.
 
-### 5.1. Project: `01_pin_names`
+### 6.1. Project: `01_pin_names`
 
 **Purpose:** Display the I/O pin numbers and names and various macro definitions of ESP32-C3 mini board with onboard 0.42" OLED display
  or the generic ESP32-C3 super mini board  
@@ -202,7 +205,7 @@ More interestingly,  `28_spi_master_i2c_oled` and `29_spi_slave_i2c_oled` are ne
   This version will yield slightly different results when run on a generic ESP32-C3 Super Mini board than the version from the [super_mini_esp32c3_sketches](https://github.com/sigmdel/supermini_esp32c3_sketches) because it will signal the absence of the `ARDUINO_ESP32C3_OLED_MINI` and `ARDUINO_MINI_ESP32C3_OLED` macros which are defined in the ESP32-C3 Mini board with OLED display board definitions.
 
 
-### 5.2. Project: `24_spi_master`
+### 6.2. Project: `24_spi_master`
 
 ***Purpose:*** Test of SPI communication as a SPI master device.
 
@@ -215,7 +218,7 @@ More interestingly,  `28_spi_master_i2c_oled` and `29_spi_slave_i2c_oled` are ne
 - This is essentially the same example found in the `24_spi_master` example in [super_mini_esp32c3_sketches](https://github.com/sigmdel/supermini_esp32c3_sketches/tree/main/24_spi_master). 
 
 
-### 5.3. Project: `25_spi_slave`
+### 6.3. Project: `25_spi_slave`
 
 ***Purpose:*** Test of SPI communication as a SPI slave device.
 
@@ -229,7 +232,7 @@ More interestingly,  `28_spi_master_i2c_oled` and `29_spi_slave_i2c_oled` are ne
 
 
 
-### 5.4. Project: `27_i2c_oled`
+### 6.4. Project: `27_i2c_oled`
 
 ***Purpose:** Test the I2C peripheral of an ESP32-C3 Mini with a 0.42" OLED I2C display.
 
@@ -240,7 +243,7 @@ More interestingly,  `28_spi_master_i2c_oled` and `29_spi_slave_i2c_oled` are ne
 - This is essentially the same example found in the [27_i2c_oled example in super_mini_esp32c3_sketches](https://github.com/sigmdel/supermini_esp32c3_sketches/tree/main/27_i2c_oled) except that the I2C SDA and SCL pins are correctly identified in the board definition.
 
 
-### 5.5. Project: `28_spi_master_i2c_oled`
+### 6.5. Project: `28_spi_master_i2c_oled`
 
 ***Purpose:*** Simultaneously test the SPI and I2C peripherals of an ESP32-C3 Mini with a 0.42" OLED I2C display.
 
@@ -251,7 +254,7 @@ More interestingly,  `28_spi_master_i2c_oled` and `29_spi_slave_i2c_oled` are ne
  - Requires an ESP32C3 Mini with OLED display. Use either the `esp32c3_oled_mini` or `mini_esp32c3_oled` environment in the `platformio.ini` configuration file. 
 
 
-### 5.6. Project: `29_spi_slave_i2c_oled`
+### 6.6. Project: `29_spi_slave_i2c_oled`
 
 ***Purpose:*** Simultaneously test the SPI and I2C peripherals of an ESP32-C3 Mini with a 0.42" OLED I2C display.
 
@@ -263,7 +266,7 @@ More interestingly,  `28_spi_master_i2c_oled` and `29_spi_slave_i2c_oled` are ne
 
 
 
-## 6. References
+## 7. References
 
 - [ESP32-C3 0.42 OLED](https://emalliab.wordpress.com/2025/02/12/esp32-c3-0-42-oled/) by Kevin (Kevin's Blog), 2025-02-12
     - They appear to be “ABRobot ESP32-C3 0.42 OLED” devices, at least when first powered on they display the text “ABrobot"
@@ -308,14 +311,15 @@ More interestingly,  `28_spi_master_i2c_oled` and `29_spi_slave_i2c_oled` are ne
 ---
 
 
-## 7. Change Log
+## 8. Change Log
 
 | Date | Change |
 | ---  | ---  |
+| 2066-04-24 | Instructions for use in Arduino IDE |
 | 2026-04-23 | Use relative path for `"variants_dir"` in the board definition manifests |
 | 2026-04-21 | First commit in GitHub |
 
-## 8. License
+## 9. License
 
 Copyright 2026, Michel Deslierres. No rights reserved
 
